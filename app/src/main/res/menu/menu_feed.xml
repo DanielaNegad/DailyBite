@@ -2,13 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- התנתקות -->
     <item
         android:id="@+id/action_logout"
         android:title="@string/logout"
         app:showAsAction="ifRoom" />
 
+    <!-- מעבר למסך פרופיל -->
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/action_profile"
         android:title="@string/profile"
         android:icon="@drawable/ic_person"
         app:showAsAction="ifRoom" />

@@ -203,4 +203,7 @@ class PostRepository @Inject constructor(
         }
         awaitClose { reg.remove() }
     }
+    suspend fun clearLocal() {
+        postDao.clearAll()
+    }
 }

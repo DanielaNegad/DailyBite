@@ -31,11 +31,8 @@
 
         <action
             android:id="@+id/action_feed_to_postComments"
-            app:destination="@id/postCommentsFragment" >
-            <argument
-                android:name="postId"
-                app:argType="string" />
-        </action>
+            app:destination="@id/postCommentsFragment" />
+
         <action
             android:id="@+id/action_feed_to_profile"
             app:destination="@id/profileFragment" />

@@ -8,6 +8,8 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dailybite.databinding.FragmentPostCommentsBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +22,8 @@ class PostCommentsFragment : Fragment() {
     private var _binding: FragmentPostCommentsBinding? = null
     private val binding get() = _binding!!
     private val vm: PostCommentsViewModel by viewModels()
+    private val args: PostCommentsFragmentArgs by navArgs()
+
     private lateinit var state: kotlinx.coroutines.flow.StateFlow<CommentsUiState>
     private val adapter = CommentsAdapter()
 
@@ -31,7 +35,7 @@ class PostCommentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val postId = requireArguments().getString("postId") ?: return
+        val postId = args.postId
 
         binding.rvComments.layoutManager = LinearLayoutManager(requireContext())
         binding.rvComments.adapter = adapter
@@ -39,9 +43,7 @@ class PostCommentsFragment : Fragment() {
         state = vm.stream(postId)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            state.collectLatest { s ->
-                adapter.submit(s.items)
-            }
+            state.collectLatest { s -> adapter.submit(s.items) }
         }
 
         binding.btnSend.isEnabled = false
@@ -49,7 +51,6 @@ class PostCommentsFragment : Fragment() {
             binding.btnSend.isEnabled = !it.isNullOrBlank()
         }
 
-        // ui/comments/PostCommentsFragment.kt
         binding.btnSend.setOnClickListener {
             val text = binding.etComment.text?.toString()?.trim().orEmpty()
             if (text.isEmpty()) return@setOnClickListener

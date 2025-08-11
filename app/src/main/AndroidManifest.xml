@@ -2,22 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- הרשאות בסיס לעבודה עם רשת ותמונות -->
+    <!-- רשת -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- קריאת תמונות מהגלריה באנדרואיד 13+ -->
-    <uses-permission
-        android:name="android.permission.READ_MEDIA_IMAGES"
-        tools:targetApi="33" />
-
-    <!-- תאימות לאנדרואיד 12 ומטה לקריאת קבצים (גלריה) -->
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-
-    <!-- מצלמה - לשימוש במסך העלאת פוסט עם צילום -->
+    <!-- מצלמה (לא חובה במכשיר) -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- הערה: אין צורך ב-READ_MEDIA_IMAGES / READ_EXTERNAL_STORAGE כשמשתמשים ב-Photo Picker / GetContent -->
 
     <application
         android:name=".DailyBiteApp"
@@ -28,7 +23,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+        android:theme="@style/Theme.DailyBite"
         tools:targetApi="31">
 
         <activity
@@ -40,7 +35,7 @@
             </intent-filter>
         </activity>
 
-        <!-- הערה: אם נצלם לקובץ דרך FileProvider, נוסיף כאן provider עם @xml/file_paths בהמשך -->
+        <!-- אם בעתיד מצלמים לקובץ דרך FileProvider, נוסיף כאן provider עם @xml/file_paths -->
     </application>
 
 </manifest>
