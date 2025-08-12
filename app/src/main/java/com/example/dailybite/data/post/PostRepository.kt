@@ -11,11 +11,12 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.channels.awaitClose
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,11 +26,8 @@ class PostRepository @Inject constructor(
     private val storage: FirebaseStorage,
     private val postDao: PostDao
 ) {
-
-    // Scope לריצות IO (כתיבה ל־Room מתוך מאזין Firestore)
     private val ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    // ---------- יצירה/עדכון/מחיקה/לייק ----------
     suspend fun createPost(
         ownerUid: String,
         mealType: String,
@@ -51,6 +49,7 @@ class PostRepository @Inject constructor(
             "updatedAt" to now,
             "likesCount" to 0
         )
+
         firestore.collection("posts").document(postId).set(data).await()
         postId
     }
@@ -60,18 +59,21 @@ class PostRepository @Inject constructor(
         mealType: String,
         description: String,
         imageStoragePath: String,
-        newImageBytes: ByteArray? // null = בלי שינוי תמונה
+        newImageBytes: ByteArray?
     ): Result<Unit> = runCatching {
         if (newImageBytes != null) {
             storage.reference.child(imageStoragePath).putBytes(newImageBytes).await()
         }
+        val updatedAt = System.currentTimeMillis()
         firestore.collection("posts").document(postId).update(
             mapOf(
                 "mealType" to mealType,
                 "description" to description,
-                "updatedAt" to System.currentTimeMillis()
+                "updatedAt" to updatedAt
             )
         ).await()
+        // עדכון מקומי ב־Room
+        postDao.updatePostDetails(postId, mealType, description, updatedAt)
     }
 
     suspend fun deletePost(postId: String, imageStoragePath: String): Result<Unit> = runCatching {
@@ -79,9 +81,8 @@ class PostRepository @Inject constructor(
             storage.reference.child(imageStoragePath).delete().await()
         }
         firestore.collection("posts").document(postId).delete().await()
-        // אופציונלי: מחיקת פידבקים
-        // val items = firestore.collection("feedback").document(postId).collection("items").get().await()
-        // items.documents.forEach { it.reference.delete().await() }
+        // מחיקה מקומית
+        postDao.deleteById(postId)
     }
 
     suspend fun like(postId: String, userUid: String): Result<Unit> = runCatching {
@@ -101,19 +102,20 @@ class PostRepository @Inject constructor(
         fidRef.set(payload).await()
     }
 
-    // תגובות
-    suspend fun addComment(postId: String, userUid: String, text: String): Result<Unit> = runCatching {
-        val ref = firestore.collection("feedback").document(postId).collection("items").document()
-        val payload = mapOf(
-            "id" to ref.id,
-            "postId" to postId,
-            "authorUid" to userUid,
-            "type" to "comment",
-            "text" to text,
-            "createdAt" to System.currentTimeMillis()
-        )
-        ref.set(payload).await()
-    }
+    suspend fun addComment(postId: String, userUid: String, text: String): Result<Unit> =
+        runCatching {
+            val ref = firestore.collection("feedback")
+                .document(postId).collection("items").document()
+            val payload = mapOf(
+                "id" to ref.id,
+                "postId" to postId,
+                "authorUid" to userUid,
+                "type" to "comment",
+                "text" to text,
+                "createdAt" to System.currentTimeMillis()
+            )
+            ref.set(payload).await()
+        }
 
     fun commentsFlow(postId: String): Flow<List<CommentItem>> =
         firestore.collection("feedback").document(postId)
@@ -130,29 +132,12 @@ class PostRepository @Inject constructor(
                 )
             }
 
-    // קריאת פוסט יחיד מהשרת (למשימות נקודתיות)
-    suspend fun getPost(postId: String): Result<PostItem> = runCatching {
-        val doc = firestore.collection("posts").document(postId).get().await()
-        val id = doc.getString("id") ?: doc.id
-        val ownerUid = doc.getString("ownerUid") ?: error("ownerUid missing")
-        val mealType = doc.getString("mealType") ?: ""
-        val description = doc.getString("description") ?: ""
-        val path = doc.getString("imageStoragePath") ?: ""
-        val createdAt = doc.getLong("createdAt") ?: 0L
-        val likesCount = (doc.getLong("likesCount") ?: 0L).toInt()
-        PostItem(id, ownerUid, mealType, description, path, createdAt, likesCount)
-    }
-
-    // ---------- Offline-first: מציגים מקומי, מסתנכרנים לרחוק ----------
-
-    // זרמים מקומיים ל־UI
     fun feedLocalFlow(): Flow<List<PostItem>> =
         postDao.feedFlow().map { rows -> rows.map { it.toItem() } }
 
     fun myPostsLocalFlow(ownerUid: String): Flow<List<PostItem>> =
         postDao.myPostsFlow(ownerUid).map { rows -> rows.map { it.toItem() } }
 
-    // מאזין Firestore → מעדכן Room
     fun startFeedSync(limit: Long = 100): ListenerRegistration =
         firestore.collection("posts")
             .orderBy("createdAt", Query.Direction.DESCENDING)
@@ -190,20 +175,20 @@ class PostRepository @Inject constructor(
                 ioScope.launch { postDao.upsertAll(items.map { it.toEntity() }) }
             }
 
-    // ---------- עוזר: המרה של Snapshot ל־Flow ----------
-    private inline fun <T> com.google.firebase.firestore.Query.snapshotsAsFlow(
-        crossinline mapDoc: (com.google.firebase.firestore.DocumentSnapshot) -> T?
-    ): Flow<List<T>> = kotlinx.coroutines.flow.callbackFlow {
-        val reg = this@snapshotsAsFlow.addSnapshotListener { snap, err ->
-            if (err != null || snap == null) {
-                trySend(emptyList()).isSuccess; return@addSnapshotListener
-            }
-            val list = snap.documents.mapNotNull(mapDoc)
-            trySend(list).isSuccess
-        }
-        awaitClose { reg.remove() }
-    }
     suspend fun clearLocal() {
         postDao.clearAll()
+    }
+
+    private inline fun <T> Query.snapshotsAsFlow(
+        crossinline mapDoc: (com.google.firebase.firestore.DocumentSnapshot) -> T?
+    ): Flow<List<T>> = callbackFlow {
+        val reg = addSnapshotListener { snap, err ->
+            if (err != null || snap == null) {
+                trySend(emptyList())
+                return@addSnapshotListener
+            }
+            trySend(snap.documents.mapNotNull(mapDoc))
+        }
+        awaitClose { reg.remove() }
     }
 }

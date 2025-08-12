@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.dailybite.data.auth.AuthRepository
 import com.example.dailybite.data.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -28,28 +30,51 @@ class ProfileViewModel @Inject constructor(
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> = _state
 
-    init {
+    private var loadJob: Job? = null
+    private var lastImagePath: String? = null
+
+    /** מפעיל האזנה לנתוני המשתמש (נקרא מה-Fragment ב-onViewCreated) */
+    fun loadUserData() {
+        if (loadJob != null) return // כבר מאזינים
         val uid = authRepo.currentUidOrNull()
-        if (uid != null) {
-            viewModelScope.launch {
-                userRepo.userFlow(uid).collectLatest { doc ->
-                    if (doc != null) {
-                        val url = if (doc.profileImagePath.isNotEmpty())
-                            userRepo.downloadUrlOrNull(doc.profileImagePath) else null
-                        _state.value = _state.value.copy(name = doc.name, photoUrl = url)
+        if (uid == null) {
+            _state.value = _state.value.copy(error = "צריך להתחבר כדי לערוך פרופיל")
+            return
+        }
+        loadJob = viewModelScope.launch {
+            userRepo.userFlow(uid).collectLatest { doc ->
+                if (doc != null) {
+                    // הורדת URL לתמונה רק אם ה-path השתנה
+                    val newPath = doc.profileImagePath.takeIf { it.isNotEmpty() }
+                    val currentUrl = _state.value.photoUrl
+                    val url: String? = when {
+                        newPath == null -> null
+                        newPath == lastImagePath -> currentUrl
+                        else -> userRepo.downloadUrlOrNull(newPath)
                     }
+                    lastImagePath = newPath
+
+                    _state.value = _state.value.copy(
+                        name = doc.name,
+                        photoUrl = url,
+                        error = null
+                    )
                 }
             }
         }
-        // אם uid=null לא עושים כלום בינתיים
     }
 
+    /** שמירת פרופיל: שם + תמונה חדשה (אם יש) */
     fun save(name: String, newImage: Uri?) {
-        val uid = authRepo.currentUidOrNull() ?: return
+        val uid = authRepo.currentUidOrNull() ?: run {
+            _state.value = _state.value.copy(error = "אין משתמש מחובר")
+            return
+        }
         _state.value = _state.value.copy(loading = true, error = null)
         viewModelScope.launch {
             val res = userRepo.updateProfile(uid, name, newImage)
             _state.value = if (res.isSuccess) {
+                // מאזין ה-realtime יעדכן את ה-state עם השם/תמונה החדשים
                 _state.value.copy(loading = false)
             } else {
                 _state.value.copy(
@@ -60,5 +85,12 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun consumeError() { _state.value = _state.value.copy(error = null) }
+    fun consumeError() {
+        _state.value = _state.value.copy(error = null)
+    }
+
+    override fun onCleared() {
+        loadJob?.cancel()
+        super.onCleared()
+    }
 }

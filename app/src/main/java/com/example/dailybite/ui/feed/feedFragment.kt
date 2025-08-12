@@ -34,6 +34,7 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // תמיכה בתפריט העליון
         setHasOptionsMenu(true)
     }
 
@@ -65,7 +66,6 @@ class FeedFragment : Fragment() {
             },
             onLongPress = { _, _ -> /* אין מחיקה בפיד הכללי */ },
             onComments = { postId ->
-                // ✅ SafeArgs במקום Bundle ידני
                 val action = FeedFragmentDirections.actionFeedToPostComments(postId)
                 findNavController().navigate(action)
             }
@@ -82,7 +82,6 @@ class FeedFragment : Fragment() {
             }
         }
 
-        // ✅ SafeArgs לניווטים נוספים (אין פרמטרים, אבל עדיף עקבי)
         binding.fabNewPost.setOnClickListener {
             val action = FeedFragmentDirections.actionFeedToNewPost()
             findNavController().navigate(action)

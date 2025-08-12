@@ -7,5 +7,6 @@ data class PostItem(
     val description: String = "",
     val imageStoragePath: String = "",
     val createdAt: Long = 0L,
-    val likesCount: Int = 0
+    val likesCount: Int = 0,
+    val updatedAt: Long = 0L
 )

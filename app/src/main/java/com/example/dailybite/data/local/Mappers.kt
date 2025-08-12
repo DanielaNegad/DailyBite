@@ -9,7 +9,8 @@ fun PostItem.toEntity() = PostEntity(
     description = description,
     imageStoragePath = imageStoragePath,
     createdAt = createdAt,
-    likesCount = likesCount
+    likesCount = likesCount,
+    updatedAt = updatedAt // ✅ כאן המפתח שחסר
 )
 
 fun PostEntity.toItem() = PostItem(
@@ -19,5 +20,6 @@ fun PostEntity.toItem() = PostItem(
     description = description,
     imageStoragePath = imageStoragePath,
     createdAt = createdAt,
-    likesCount = likesCount
+    likesCount = likesCount,
+    updatedAt = updatedAt
 )

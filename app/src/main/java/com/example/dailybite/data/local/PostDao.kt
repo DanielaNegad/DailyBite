@@ -23,4 +23,12 @@ interface PostDao {
 
     @Query("DELETE FROM posts WHERE id = :postId")
     suspend fun deleteById(postId: String)
+
+    @Query("UPDATE posts SET mealType = :mealType, description = :description, updatedAt = :updatedAt WHERE id = :postId")
+    suspend fun updatePostDetails(
+        postId: String,
+        mealType: String,
+        description: String,
+        updatedAt: Long
+    )
 }

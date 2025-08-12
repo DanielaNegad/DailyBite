@@ -15,6 +15,9 @@
     <string name="meal_dinner">ערב</string>
     <string name="meal_snack">נשנוש</string>
 
+    <!-- מחרוזת לשגיאת שם בפרופיל -->
+    <string name="profile_error_name_required">נא להזין שם</string>
+
     <string-array name="meal_types">
         <item>@string/meal_breakfast</item>
         <item>@string/meal_lunch</item>

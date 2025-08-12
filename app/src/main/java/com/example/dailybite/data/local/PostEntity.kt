@@ -11,5 +11,6 @@ data class PostEntity(
     val description: String,
     val imageStoragePath: String,
     val createdAt: Long,
-    val likesCount: Int
+    val likesCount: Int,
+    val updatedAt: Long
 )

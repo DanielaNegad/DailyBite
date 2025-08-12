@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class MyPostsUiState(
@@ -30,7 +31,6 @@ class MyPostsViewModel @Inject constructor(
 
     val state: StateFlow<MyPostsUiState> =
         if (uid.isNullOrEmpty()) {
-            // ללא משתמש מחובר
             flowOf(emptyList<PostItem>())
                 .map { MyPostsUiState(loading = false, items = it) }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MyPostsUiState())
@@ -41,10 +41,16 @@ class MyPostsViewModel @Inject constructor(
         }
 
     init {
-        // מפעיל סנכרון רק אם יש UID
         uid?.let { u ->
             syncReg = repo.startMyPostsSync(u)
         }
+    }
+
+    /**
+     * מחיקת פוסט לפי מזהה + נתיב תמונה (אם יש)
+     */
+    suspend fun deletePost(postId: String, imagePath: String?): Result<Unit> {
+        return repo.deletePost(postId, imagePath ?: "")
     }
 
     override fun onCleared() {
