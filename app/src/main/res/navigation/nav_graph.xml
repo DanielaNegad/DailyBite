@@ -9,7 +9,8 @@
     <fragment
         android:id="@+id/authFragment"
         android:name="com.example.dailybite.ui.auth.AuthFragment"
-        android:label="Auth">
+        android:label="Auth"
+        tools:layout="@layout/fragment_auth">
         <action
             android:id="@+id/action_auth_to_feed"
             app:destination="@id/feedFragment" />
@@ -19,15 +20,14 @@
     <fragment
         android:id="@+id/feedFragment"
         android:name="com.example.dailybite.ui.feed.FeedFragment"
-        android:label="Feed">
+        android:label="Feed"
+        tools:layout="@layout/fragment_feed">
 
         <action
             android:id="@+id/action_feed_to_newPost"
             app:destination="@id/newPostFragment" />
 
-        <action
-            android:id="@+id/action_feed_to_myPosts"
-            app:destination="@id/myPostsFragment" />
+
 
         <action
             android:id="@+id/action_feed_to_postComments"
@@ -36,6 +36,7 @@
         <action
             android:id="@+id/action_feed_to_profile"
             app:destination="@id/profileFragment" />
+
         <action
             android:id="@+id/action_feed_to_login"
             app:destination="@id/authFragment" />
@@ -45,47 +46,66 @@
     <fragment
         android:id="@+id/newPostFragment"
         android:name="com.example.dailybite.ui.post.NewPostFragment"
-        android:label="NewPost" />
+        android:label="NewPost"
+        tools:layout="@layout/fragment_new_post" />
 
     <!-- הפוסטים שלי -->
     <fragment
         android:id="@+id/myPostsFragment"
         android:name="com.example.dailybite.ui.myposts.MyPostsFragment"
-        android:label="MyPosts">
+        android:label="MyPosts"
+        tools:layout="@layout/fragment_my_posts">
+
         <action
             android:id="@+id/action_myPosts_to_profile"
             app:destination="@id/profileFragment" />
 
         <action
             android:id="@+id/action_myPosts_to_postEdit"
-            app:destination="@id/postEditFragment" >
-        </action>
-
+            app:destination="@id/postEditFragment" />
     </fragment>
 
     <!-- תגובות -->
     <fragment
         android:id="@+id/postCommentsFragment"
         android:name="com.example.dailybite.ui.comments.PostCommentsFragment"
-        android:label="Comments">
-        <argument android:name="postId" app:argType="string" />
+        android:label="Comments"
+        tools:layout="@layout/fragment_post_comments">
+        <argument
+            android:name="postId"
+            app:argType="string" />
     </fragment>
 
     <!-- עריכת פוסט -->
     <fragment
         android:id="@+id/postEditFragment"
         android:name="com.example.dailybite.ui.post.EditPostFragment"
-        android:label="EditPost">
-        <argument android:name="postId" app:argType="string" />
-        <argument android:name="imageStoragePath" app:argType="string" />
-        <argument android:name="mealType" app:argType="string" />
-        <argument android:name="description" app:argType="string" />
+        android:label="EditPost"
+        tools:layout="@layout/fragment_edit_post">
+        <argument
+            android:name="postId"
+            app:argType="string" />
+        <argument
+            android:name="imageStoragePath"
+            app:argType="string" />
+        <argument
+            android:name="mealType"
+            app:argType="string" />
+        <argument
+            android:name="description"
+            app:argType="string" />
     </fragment>
 
+    <!-- פרופיל -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.dailybite.ui.profile.ProfileFragment"
         android:label="פרופיל"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <!-- הוספנו את הניווט מכאן ל-MyPosts -->
+        <action
+            android:id="@+id/action_profile_to_myPosts"
+            app:destination="@id/myPostsFragment" />
+    </fragment>
 
 </navigation>

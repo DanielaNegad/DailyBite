@@ -3,16 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- רשת -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <!-- מצלמה (לא חובה במכשיר) -->
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
-
-    <!-- הערה: אין צורך ב-READ_MEDIA_IMAGES / READ_EXTERNAL_STORAGE כשמשתמשים ב-Photo Picker / GetContent -->
+        android:required="false"/>
 
     <application
         android:name=".DailyBiteApp"
@@ -30,12 +28,12 @@
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <!-- אם בעתיד מצלמים לקובץ דרך FileProvider, נוסיף כאן provider עם @xml/file_paths -->
-    </application>
+        <!-- אם בעתיד תצרי FileProvider, הוסיפי כאן <provider> -->
 
+    </application>
 </manifest>

@@ -43,18 +43,5 @@ class EditPostViewModel @Inject constructor(
         }
     }
 
-    fun consumeSuccess() { _state.value = _state.value.copy(success = false) }
-    fun consumeError() { _state.value = _state.value.copy(error = null) }
 
-    fun delete(postId: String, imageStoragePath: String) {
-        _state.value = _state.value.copy(loading = true, error = null, deleted = false)
-        viewModelScope.launch {
-            val res = repo.deletePost(postId, imageStoragePath)
-            _state.value = if (res.isSuccess) {
-                _state.value.copy(loading = false, deleted = true)
-            } else {
-                _state.value.copy(loading = false, error = res.exceptionOrNull()?.localizedMessage ?: "שגיאה במחיקה")
-            }
-        }
-    }
 }

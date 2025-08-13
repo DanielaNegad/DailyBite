@@ -1,27 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DailyBite</string>
+
+    <!-- Auth -->
     <string name="auth_title">ברוכים הבאים ל־DailyBite</string>
     <string name="auth_email_hint">אימייל</string>
     <string name="auth_password_hint">סיסמה</string>
     <string name="auth_login">כניסה</string>
     <string name="auth_register">הרשמה</string>
     <string name="auth_forgot">שכחת סיסמה?</string>
-    <string name="auth_guest">המשך כאורח</string>
+
+    <!-- Common -->
     <string name="logout">התנתקות</string>
     <string name="profile">פרופיל</string>
 
+    <!-- Meals -->
     <string name="meal_breakfast">בוקר</string>
     <string name="meal_lunch">צהריים</string>
     <string name="meal_dinner">ערב</string>
     <string name="meal_snack">נשנוש</string>
-
-    <!-- מחרוזת לשגיאת שם בפרופיל -->
-    <string name="profile_error_name_required">נא להזין שם</string>
-
     <string-array name="meal_types">
         <item>@string/meal_breakfast</item>
         <item>@string/meal_lunch</item>
         <item>@string/meal_dinner</item>
         <item>@string/meal_snack</item>
     </string-array>
+
+    <!-- Profile -->
+    <string name="profile_avatar">תמונת פרופיל</string>
+    <string name="profile_pick_image">בחרי תמונה</string>
+    <string name="profile_name">שם מלא</string>
+    <string name="profile_save">שמירה</string>
+    <string name="profile_my_posts">הפוסטים שלי</string>
+    <string name="profile_logout">התנתקות</string>
+    <string name="profile_error_name_required">נא להזין שם</string>
 </resources>

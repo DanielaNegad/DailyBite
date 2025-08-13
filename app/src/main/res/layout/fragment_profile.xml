@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp">
+        android:padding="16dp">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivAvatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:contentDescription="תמונת פרופיל"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/profile_avatar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/circle_background" />
+            tools:src="@drawable/ic_avatar_placeholder" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPickImage"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="בחרי תמונה"
+            android:text="@string/profile_pick_image"
             app:layout_constraintTop_toBottomOf="@id/ivAvatar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:hint="@string/profile_name"
             app:layout_constraintTop_toBottomOf="@id/btnPickImage"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -44,42 +46,52 @@
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="שם"
-                android:minHeight="48dp"
-                android:inputType="textPersonName"/>
+                android:inputType="text|textCapSentences"
+                android:imeOptions="actionDone"
+                android:textDirection="locale"
+                android:textLocale="he"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
             android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:text="שמור"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_save"
             app:layout_constraintTop_toBottomOf="@id/tilName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
 
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:layout_constraintTop_toTopOf="@id/btnSave"
-            app:layout_constraintBottom_toBottomOf="@id/btnSave"
-            app:layout_constraintEnd_toEndOf="@id/btnSave"
-            android:visibility="gone"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMyPosts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_my_posts"
+            app:layout_constraintTop_toBottomOf="@id/btnSave"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="התנתקות"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/btnSave"
+            android:text="@string/profile_logout"
+            app:layout_constraintTop_toBottomOf="@id/btnMyPosts"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp" />
 
-
-
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -19,6 +19,7 @@ coroutines = "1.8.1"
 firebase-bom = "33.4.0"
 gms = "4.4.2"
 coil = "2.6.0"
+fragment = "1.8.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +51,7 @@ firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-fires
 firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx" }
 
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

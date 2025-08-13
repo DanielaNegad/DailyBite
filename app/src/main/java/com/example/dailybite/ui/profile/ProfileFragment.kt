@@ -50,11 +50,17 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // האזנה למידע המשתמש
+        // טען נתוני משתמש
         vm.loadUserData()
 
         // בחירת תמונה
         binding.btnPickImage.setOnClickListener { pickImage.launch("image/*") }
+
+        // ניווט ל-"הפוסטים שלי"
+        binding.btnMyPosts.setOnClickListener {
+            // נווט לפי ה-action שהוגדר ב-nav_graph
+            findNavController().navigate(R.id.action_profile_to_myPosts)
+        }
 
         // ניקוי שגיאה בשדה שם
         binding.etName.doAfterTextChanged {
@@ -83,6 +89,7 @@ class ProfileFragment : Fragment() {
                 binding.progress.isVisible = s.loading
                 binding.btnSave.isEnabled = !s.loading
                 binding.btnPickImage.isEnabled = !s.loading
+                binding.btnMyPosts.isEnabled = !s.loading
                 binding.tilName.isEnabled = !s.loading
 
                 if (s.photoUrl != null && pickedImage == null) {

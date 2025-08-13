@@ -89,10 +89,7 @@ class FeedFragment : Fragment() {
             findNavController().navigate(FeedFragmentDirections.actionFeedToNewPost())
         }
 
-        // מעבר לפוסטים שלי
-        binding.btnMyPosts.setOnClickListener {
-            findNavController().navigate(FeedFragmentDirections.actionFeedToMyPosts())
-        }
+
 
         // מעבר לפרופיל דרך כפתור בעמוד
         binding.btnProfile.setOnClickListener {

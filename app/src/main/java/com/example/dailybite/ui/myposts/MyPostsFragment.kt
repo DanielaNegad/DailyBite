@@ -35,7 +35,6 @@ class MyPostsFragment : Fragment(R.layout.fragment_feed) {
 
         // מסתירים כפתורים שלא רלוונטיים במסך "הפוסטים שלי"
         binding.fabNewPost.visibility = View.GONE
-        binding.btnMyPosts.visibility = View.GONE
 
         adapter = PostAdapter(
             storage = storage,
