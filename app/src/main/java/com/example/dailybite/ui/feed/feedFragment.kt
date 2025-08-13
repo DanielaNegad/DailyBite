@@ -34,7 +34,7 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // תמיכה בתפריט העליון
+        // הפעלת תפריט עליון
         setHasOptionsMenu(true)
     }
 
@@ -50,6 +50,7 @@ class FeedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // יצירת אדפטר לפוסטים
         adapter = PostAdapter(
             storage = storage,
             onLike = { postId ->
@@ -60,7 +61,7 @@ class FeedFragment : Fragment() {
                 viewLifecycleOwner.lifecycleScope.launch {
                     val res = postsRepo.like(postId, uid)
                     if (res.isFailure) {
-                        Toast.makeText(requireContext(), "הלייק נכשל", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "הפעולה נכשלה", Toast.LENGTH_SHORT).show()
                     }
                 }
             },
@@ -74,6 +75,7 @@ class FeedFragment : Fragment() {
         binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPosts.adapter = adapter
 
+        // תצפית על הפיד
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             vm.state.collectLatest { s ->
                 binding.tvEmpty.visibility = if (s.items.isEmpty()) View.VISIBLE else View.GONE
@@ -82,22 +84,23 @@ class FeedFragment : Fragment() {
             }
         }
 
+        // כפתור לפרסום פוסט חדש
         binding.fabNewPost.setOnClickListener {
-            val action = FeedFragmentDirections.actionFeedToNewPost()
-            findNavController().navigate(action)
+            findNavController().navigate(FeedFragmentDirections.actionFeedToNewPost())
         }
 
+        // מעבר לפוסטים שלי
         binding.btnMyPosts.setOnClickListener {
-            val action = FeedFragmentDirections.actionFeedToMyPosts()
-            findNavController().navigate(action)
+            findNavController().navigate(FeedFragmentDirections.actionFeedToMyPosts())
         }
 
+        // מעבר לפרופיל דרך כפתור בעמוד
         binding.btnProfile.setOnClickListener {
-            val action = FeedFragmentDirections.actionFeedToProfile()
-            findNavController().navigate(action)
+            findNavController().navigate(FeedFragmentDirections.actionFeedToProfile())
         }
     }
 
+    // תפריט עליון
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_feed, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -107,13 +110,11 @@ class FeedFragment : Fragment() {
         return when (item.itemId) {
             R.id.action_logout -> {
                 authRepo.signOut()
-                val action = FeedFragmentDirections.actionFeedToLogin()
-                findNavController().navigate(action)
+                findNavController().navigate(FeedFragmentDirections.actionFeedToLogin())
                 true
             }
             R.id.action_profile -> {
-                val action = FeedFragmentDirections.actionFeedToProfile()
-                findNavController().navigate(action)
+                findNavController().navigate(FeedFragmentDirections.actionFeedToProfile())
                 true
             }
             else -> super.onOptionsItemSelected(item)

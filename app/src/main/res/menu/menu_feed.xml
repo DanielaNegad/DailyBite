@@ -2,17 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- פרופיל -->
+    <item
+        android:id="@+id/action_profile"
+        android:title="פרופיל"
+        android:icon="@drawable/ic_avatar_placeholder"
+        app:showAsAction="ifRoom" />
+
     <!-- התנתקות -->
     <item
         android:id="@+id/action_logout"
-        android:title="@string/logout"
-        app:showAsAction="ifRoom" />
-
-    <!-- מעבר למסך פרופיל -->
-    <item
-        android:id="@+id/action_profile"
-        android:title="@string/profile"
-        android:icon="@drawable/ic_avatar_placeholder"
+        android:title="התנתקות"
+        android:icon="@drawable/ic_logout"
         app:showAsAction="ifRoom" />
 
 </menu>

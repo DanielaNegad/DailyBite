@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         // קביעת מסך פתיחה דינמית לפי אם יש משתמש מחובר
         val navHost = supportFragmentManager
-            .findFragmentById(R.id.nav_host) as NavHostFragment
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHost.navController
         val graph = navController.navInflater.inflate(R.navigation.nav_graph)
 

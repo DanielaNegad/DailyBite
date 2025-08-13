@@ -53,9 +53,14 @@
         android:name="com.example.dailybite.ui.myposts.MyPostsFragment"
         android:label="MyPosts">
         <action
+            android:id="@+id/action_myPosts_to_profile"
+            app:destination="@id/profileFragment" />
+
+        <action
             android:id="@+id/action_myPosts_to_postEdit"
             app:destination="@id/postEditFragment" >
         </action>
+
     </fragment>
 
     <!-- תגובות -->

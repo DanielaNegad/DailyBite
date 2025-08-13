@@ -10,12 +10,12 @@ import com.example.dailybite.data.post.PostItem
 import com.example.dailybite.databinding.ItemPostBinding
 import com.google.firebase.storage.FirebaseStorage
 
-
 class PostAdapter(
     private val storage: FirebaseStorage,
     private val onLike: (postId: String) -> Unit = {},
     private val onLongPress: ((postId: String, imagePath: String) -> Unit)? = null,
-    private val onComments: (postId: String) -> Unit = {}
+    private val onComments: (postId: String) -> Unit = {},
+    private val onProfile: (postId: String) -> Unit = {}  // ✅ חדש: מאזין לפרופיל
 ) : ListAdapter<PostItem, PostAdapter.VH>(DIFF) {
 
     inner class VH(val b: ItemPostBinding) : RecyclerView.ViewHolder(b.root)
@@ -35,7 +35,7 @@ class PostAdapter(
         holder.b.btnLike.setOnClickListener { onLike(item.id) }
         holder.b.btnComments.setOnClickListener { onComments(item.id) }
 
-        holder.itemView.setOnLongClickListener {
+                holder.itemView.setOnLongClickListener {
             onLongPress?.invoke(item.id, item.imageStoragePath)
             true
         }

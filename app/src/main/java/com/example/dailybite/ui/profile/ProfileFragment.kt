@@ -12,9 +12,12 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.example.dailybite.R
 import com.example.dailybite.databinding.FragmentProfileBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -47,16 +50,18 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // מפעיל האזנה לנתוני המשתמש
+        // האזנה למידע המשתמש
         vm.loadUserData()
 
+        // בחירת תמונה
         binding.btnPickImage.setOnClickListener { pickImage.launch("image/*") }
 
-        // נקה שגיאת שדה כאשר המשתמש מקליד
+        // ניקוי שגיאה בשדה שם
         binding.etName.doAfterTextChanged {
             binding.tilName.error = null
         }
 
+        // שמירה
         binding.btnSave.setOnClickListener {
             val name = binding.etName.text?.toString()?.trim().orEmpty()
             if (name.isEmpty()) {
@@ -66,6 +71,13 @@ class ProfileFragment : Fragment() {
             vm.save(name, pickedImage)
         }
 
+        // התנתקות
+        binding.btnLogout.setOnClickListener {
+            Firebase.auth.signOut()
+            findNavController().navigate(R.id.authFragment)
+        }
+
+        // תצוגת נתונים ועדכון UI
         viewLifecycleOwner.lifecycleScope.launch {
             vm.state.collectLatest { s ->
                 binding.progress.isVisible = s.loading
@@ -80,7 +92,6 @@ class ProfileFragment : Fragment() {
                         error(R.drawable.ic_avatar_placeholder)
                     }
                 } else if (s.photoUrl == null && pickedImage == null) {
-                    // פלייסהולדר אם אין תמונה בכלל
                     binding.ivAvatar.setImageResource(R.drawable.ic_avatar_placeholder)
                 }
 

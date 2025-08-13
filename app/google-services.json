@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "607493655576",
-    "project_id": "dailybite-4b1fa",
-    "storage_bucket": "dailybite-4b1fa.firebasestorage.app"
+    "project_number": "891921626636",
+    "project_id": "dailybite-4f13c",
+    "storage_bucket": "dailybite-4f13c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:607493655576:android:13f51d9869301e8ba0c76d",
+        "mobilesdk_app_id": "1:891921626636:android:6813ddeca21320a8182029",
         "android_client_info": {
           "package_name": "com.example.dailybite"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBjcAU1TAaQpXD2TiBarkyvaQ_xCZRd6JQ"
+          "current_key": "AIzaSyCYBNMA9weV5hmO7YGLvGsU5sCl9DODVdg"
         }
       ],
       "services": {

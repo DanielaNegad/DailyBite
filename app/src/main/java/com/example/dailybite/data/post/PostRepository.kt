@@ -36,7 +36,13 @@ class PostRepository @Inject constructor(
     ): Result<String> = runCatching {
         val postId = firestore.collection("posts").document().id
         val path = "posts/$ownerUid/$postId.jpg"
-        storage.reference.child(path).putBytes(imageBytes).await()
+        val storageRef = storage.reference.child(path)
+
+        // העלאת תמונה
+        val uploadResult = storageRef.putBytes(imageBytes).await()
+
+        // בדיקה שההעלאה הצליחה
+        uploadResult.metadata ?: throw Exception("העלאת התמונה נכשלה")
 
         val now = System.currentTimeMillis()
         val data = mapOf(
@@ -53,6 +59,8 @@ class PostRepository @Inject constructor(
         firestore.collection("posts").document(postId).set(data).await()
         postId
     }
+
+    // המשך שאר הפונקציות (לא שינינו אותן)
 
     suspend fun updatePost(
         postId: String,
@@ -72,7 +80,6 @@ class PostRepository @Inject constructor(
                 "updatedAt" to updatedAt
             )
         ).await()
-        // עדכון מקומי ב־Room
         postDao.updatePostDetails(postId, mealType, description, updatedAt)
     }
 
@@ -81,7 +88,6 @@ class PostRepository @Inject constructor(
             storage.reference.child(imageStoragePath).delete().await()
         }
         firestore.collection("posts").document(postId).delete().await()
-        // מחיקה מקומית
         postDao.deleteById(postId)
     }
 
