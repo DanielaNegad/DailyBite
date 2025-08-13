@@ -139,22 +139,7 @@ class PostRepository @Inject constructor(
             ref.set(payload).await()
         }
 
-    /** זרם תגובות לפי פוסט (ממויין לפי זמן) */
-    fun commentsFlow(postId: String): Flow<List<CommentItem>> =
-        firestore.collection("feedback").document(postId)
-            .collection("items")
-            .whereEqualTo("type", "comment")
-            .orderBy("createdAt", Query.Direction.ASCENDING)
-            .snapshotsAsFlow { d ->
-                val pid = d.getString("postId") ?: return@snapshotsAsFlow null
-                CommentItem(
-                    id = d.getString("id") ?: d.id,
-                    postId = pid,
-                    authorUid = d.getString("authorUid") ?: "",
-                    text = d.getString("text") ?: "",
-                    createdAt = d.getLong("createdAt") ?: 0L
-                )
-            }
+
 
     /** פיד כללי מקומי (Room) */
     fun feedLocalFlow(): Flow<List<PostItem>> =

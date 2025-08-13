@@ -30,10 +30,7 @@ class PostAdapter(
 
         holder.b.tvMeal.text = item.mealType
         holder.b.tvDesc.text = item.description
-        holder.b.tvLikes.text = item.likesCount.toString()
 
-        holder.b.btnLike.setOnClickListener { onLike(item.id) }
-        holder.b.btnComments.setOnClickListener { onComments(item.id) }
 
                 holder.itemView.setOnLongClickListener {
             onLongPress?.invoke(item.id, item.imageStoragePath)

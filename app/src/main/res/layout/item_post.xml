@@ -30,7 +30,8 @@
             android:layout_marginTop="8dp"
             android:text="סוג הארוחה"
             android:textStyle="bold"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textDirection="locale" />
 
         <!-- תיאור המנה -->
         <TextView
@@ -39,37 +40,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="תיאור המנה"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textDirection="locale" />
 
-        <!-- אזור הלייקים -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+        <!-- אזור הלייקים/תגובות הוסר בכוונה -->
 
-            <Button
-                android:id="@+id/btnLike"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="👍 לייק" />
-
-            <TextView
-                android:id="@+id/tvLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="0"
-                android:textSize="14sp" />
-
-            <Button
-                android:id="@+id/btnComments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="תגובות" />
-        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
