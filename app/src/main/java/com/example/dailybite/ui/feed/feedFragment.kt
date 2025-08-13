@@ -79,7 +79,7 @@ class FeedFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             vm.state.collectLatest { s ->
                 binding.tvEmpty.visibility = if (s.items.isEmpty()) View.VISIBLE else View.GONE
-                binding.tvEmpty.text = "הפיד ריק כרגע. לחצי על ה־FAB כדי לפרסם פוסט ראשון."
+                binding.tvEmpty.text = "הפיד ריק כרגע. לחץ על כפתור הפלוס כדי לפרסם פוסט ראשון."
                 adapter.submitList(s.items)
             }
         }
@@ -90,11 +90,6 @@ class FeedFragment : Fragment() {
         }
 
 
-
-        // מעבר לפרופיל דרך כפתור בעמוד
-        binding.btnProfile.setOnClickListener {
-            findNavController().navigate(FeedFragmentDirections.actionFeedToProfile())
-        }
     }
 
     // תפריט עליון

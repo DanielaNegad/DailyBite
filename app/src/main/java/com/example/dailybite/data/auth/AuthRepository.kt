@@ -24,12 +24,6 @@ class AuthRepository @Inject constructor(
         awaitClose { auth.removeAuthStateListener(listener) }
     }
 
-    suspend fun signInAnonymously(): Result<String> = runCatching {
-        val res = auth.signInAnonymously().await()
-        val uid = res.user?.uid ?: error("Anonymous sign-in failed")
-        ensureUserDoc(uid, res.user?.displayName)
-        uid
-    }
 
     suspend fun signInEmail(email: String, password: String): Result<String> = runCatching {
         val res = auth.signInWithEmailAndPassword(email.trim(), password).await()

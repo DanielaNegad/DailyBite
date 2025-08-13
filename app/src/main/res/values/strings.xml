@@ -8,7 +8,6 @@
     <string name="auth_password_hint">סיסמה</string>
     <string name="auth_login">כניסה</string>
     <string name="auth_register">הרשמה</string>
-    <string name="auth_forgot">שכחת סיסמה?</string>
 
     <!-- Common -->
     <string name="logout">התנתקות</string>

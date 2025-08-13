@@ -65,15 +65,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun loginGuest() {
-        _state.value = AuthUiState(loading = true)
-        viewModelScope.launch {
-            val res = repo.signInAnonymously()
-            _state.value = if (res.isSuccess) AuthUiState(loggedIn = true)
-            else AuthUiState(error = res.exceptionOrNull()?.localizedMessage ?: "שגיאה בכניסת אורח")
-        }
-    }
-
     fun consumeError() {
         _state.value = _state.value.copy(error = null)
     }

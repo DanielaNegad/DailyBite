@@ -80,10 +80,7 @@ class MyPostsFragment : Fragment(R.layout.fragment_feed) {
         binding.rvPosts.layoutManager = LinearLayoutManager(requireContext())
         binding.rvPosts.adapter = adapter
 
-        // כפתור פרופיל (אם קיים בלייאאוט)
-        binding.btnProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_myPosts_to_profile)
-        }
+
 
         // תצוגה ריקה אם אין פוסטים
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {

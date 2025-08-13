@@ -57,13 +57,8 @@ class AuthFragment : Fragment() {
             )
         }
 
-        binding.tvForgot.setOnClickListener {
-            vm.resetPassword(binding.etEmail.text?.toString().orEmpty())
-        }
 
-        binding.btnGuest.setOnClickListener {
-            vm.loginGuest()
-        }
+
 
         // תצפית בטוחה ללא launchWhenStarted (מוחלף ב-repeatOnLifecycle)
         viewLifecycleOwner.lifecycleScope.launch {
@@ -72,7 +67,6 @@ class AuthFragment : Fragment() {
                     val loading = s.loading
                     binding.btnLogin.isEnabled = !loading
                     binding.btnRegister.isEnabled = !loading
-                    binding.btnGuest.isEnabled = !loading
                     binding.tilEmail.isEnabled = !loading
                     binding.tilPassword.isEnabled = !loading
                     binding.progress.isVisible = loading
